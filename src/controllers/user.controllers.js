@@ -1,7 +1,7 @@
 import {asyncHandler} from "../utils/asyncHandler.js";
-import ApiError from "../utils/ApiError.js"
+import { ApiError } from "../utils/ApiError.js"
 import { User } from "../models/users.models.js";
-import {uploadOnCloudinary} from "../utils/cloudinary.js"
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 const registerUser = asyncHandler( async(req,res)=>{
@@ -24,7 +24,7 @@ const registerUser = asyncHandler( async(req,res)=>{
     }
 
     //3. user exist or not
-    const existedUser = User.findOne({
+    const existedUser = await User.findOne({
         $or:[{ username } , { email }]
     })
 
@@ -53,11 +53,11 @@ const registerUser = asyncHandler( async(req,res)=>{
     //8. create user 
     const user = await User.create({
         fullName,
-        username: username.toLowerCase(),
+        avatar: avatar.url,
+        coverImage: coverImage?.url||"",
         email,
         password,
-        avatar: avatar.url,
-        coverImage: coverImage?.url||""
+        username: username.toLowerCase(),
     })
 
     // 9. now to verify user is created of not
