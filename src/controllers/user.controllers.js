@@ -13,6 +13,8 @@ const generateAccessAndRefereshTokens = async(userId) =>{
         user.refreshToken = refreshToken
         await user.save({ validateBeforeSave: false })
 
+        // console.log(accessToken,refreshToken)
+
         return {accessToken, refreshToken}
 
 
@@ -132,7 +134,8 @@ const loginUser = asyncHandler( async(req,res)=>{
     }
     
     //6. genrate ascces and refresh token
-    const {accessToken,refreshToken} = generateAccessAndRefereshTokens(user._id)
+    const {accessToken,refreshToken} = await generateAccessAndRefereshTokens(user._id)
+    
 
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
