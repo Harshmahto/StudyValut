@@ -110,7 +110,7 @@ const loginUser = asyncHandler( async(req,res)=>{
     const {username,email,password}=req.body;
 
     //2. check username or email
-    if( !username || !email ){
+    if( !(username || email) ){
         throw new ApiError(401,"username or email is required")
     }
 
@@ -134,7 +134,7 @@ const loginUser = asyncHandler( async(req,res)=>{
     //6. genrate ascces and refresh token
     const {accessToken,refreshToken} = generateAccessAndRefereshTokens(user._id)
 
-    const loggedInUser = User.findById(user._id).select("-password -refreshToken")
+    const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
     //options is make the cookie editatble only to the server
     const options = {
@@ -157,8 +157,29 @@ const loginUser = asyncHandler( async(req,res)=>{
     )
 })
 
-const logoutUser = asyncHandler(async(req,res)=>{
-    
+const logoutUser = asyncHandler(async(req, res) => {
+    await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $unset: {
+                refreshToken: 1 // this removes the field from document
+            }
+        },
+        {
+            new: true
+        }
+    )
+
+    const options = {
+        httpOnly: true,
+        secure: true
+    }
+
+    return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, {}, "User logged Out"))
 })
 export{
     registerUser,
