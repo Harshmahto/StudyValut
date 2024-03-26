@@ -17,9 +17,11 @@ app.use(cookieParser())
 
 // Routes imports
 import userRouter from "./routes/user.routes.js";
+import pdfsRouter from "./routes/pdfs.routes.js"
 
 // Router declaration
 app.use("/api/v1/user",userRouter)
+app.use("/api/v1/pdfs",pdfsRouter)
 
 
 

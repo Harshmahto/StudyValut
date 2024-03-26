@@ -5,28 +5,35 @@ import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2"
 const pdfSchema = new Schema(
     {
         owner:{
-            type : Schema.Types.ObjectId,
-            ref: "User"
+            type : String,
+            required : true
         },
         pdfName:{
             type: String,
+            lowercase: true,
+            trime: true,
             required: true
         },
         subject:{
             type: String,
-            required: true
+            required: true,
+            lowercase: true,
+            trime: true
         },
         semester:{
             type: String,
-            required: true
-        },
-        semester:{
-            type: String,
-            required: true
+            required: true,
         },
         categories:{
             type: String,
-            required: true
+            required: true,
+            lowercase: true,
+            trime: true
+        },
+        pdfFile:{
+            type: String, // store the link form cloudinary
+            required :true,
+
         },
         pyqYear:{
             type:Number
