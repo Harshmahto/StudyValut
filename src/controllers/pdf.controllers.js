@@ -89,6 +89,57 @@ const uploadPDF = asyncHandler(async(req,res)=>{
 })
 
 
+const getpdfdata = asyncHandler(async(req,res)=>{
+    // get username ,semseter , subject
+    // check the all 
+    // pdf aggregate
+    // check the data
+    //res the whole document
+
+    const {username,semester,subject} = req.query
+    // console.log(req.query)
+
+    if([username,semester,subject].some((field)=>field?.trim()==="")){
+        throw new ApiError(400,"All fields are required")
+    }
+    console.log(username,semester,subject)
+
+    const wholedocument = await Pdf.aggregate([
+        {
+            $match:{
+                owner: username,
+                semester:semester,
+                subject:subject
+            },
+        },
+        {
+            $project:{
+                pdfName:1,
+                categories:1,
+                pdfFile:1,
+                pyqYear:1
+            }
+        }
+    ])
+
+    if (!wholedocument?.length) {
+        throw new ApiError(404, "No pdf found")
+    }
+
+    console.log(wholedocument)
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,wholedocument,"Resqested PDFs"
+        )
+    )
+
+
+
+
+})
+
+
 
 
 
@@ -96,4 +147,5 @@ const uploadPDF = asyncHandler(async(req,res)=>{
 
 export {
     uploadPDF,
+    getpdfdata
 }
