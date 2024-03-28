@@ -96,13 +96,13 @@ const getpdfdata = asyncHandler(async(req,res)=>{
     // check the data
     //res the whole document
 
-    const {username,semester,subject} = req.query
+    const { username , semester  ,subject } = req.query
     // console.log(req.query)
 
-    if([username,semester,subject].some((field)=>field?.trim()==="")){
+    if([ username , semester , subject ].some((field)=>field?.trim()==="")){
         throw new ApiError(400,"All fields are required")
     }
-    console.log(username,semester,subject)
+    // console.log(username,semester,subject)
 
     const wholedocument = await Pdf.aggregate([
         {
@@ -126,7 +126,7 @@ const getpdfdata = asyncHandler(async(req,res)=>{
         throw new ApiError(404, "No pdf found")
     }
 
-    console.log(wholedocument)
+    // console.log(wholedocument)
 
     return res.status(200).json(
         new ApiResponse(

@@ -8,7 +8,7 @@ const router = Router();
 //secured routes
 
 router.route("/uploadpdf").post(upload.single('pdfFile'),verifyJWT,uploadPDF)
-router.route("/getpdfdata").get(getpdfdata)
+router.route("/getpdfdata").get(verifyJWT,getpdfdata)
 
 
 export default router;
